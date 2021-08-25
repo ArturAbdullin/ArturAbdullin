@@ -1,0 +1,72 @@
+body {
+    background-image: url("world.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.title {
+    text-align: center;
+}
+
+.flex-container {
+    height: 500px;
+    width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+    align-content: space-around;
+}
+
+.flex-item {
+    z-index: 3;
+    perspective: 1000px;
+}
+
+.card {
+    font-weight: bold;
+    height: 150px;
+    width: 150px;
+    position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 1s ease;
+    -webkit-transition: transform 1s ease;
+    -moz-transition: transform 1s ease;
+}
+
+.flex-item:hover .card {
+    transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+}
+
+.front,
+.back {
+    height: 100%;
+    width: 100%;
+    border-radius: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+
+.front {
+    z-index: 2;
+    background-color: antiquewhite;
+    color: coral;
+    backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+}
+
+.back {
+    z-index: 1;
+    transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    background-color: coral;
+    color: antiquewhite;
+    -moz-backface-visibility: hidden;
+}
+
