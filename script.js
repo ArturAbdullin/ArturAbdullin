@@ -1,5 +1,5 @@
 function changeFrame (event) {
-  let src = event.srcElement.attributes.href.nodeValue;
+  let src = event.srcElement.attributes['data-href'].nodeValue;
   const oldFrame = document.getElementById('frame');
   if (oldFrame) {
     document.body.removeChild(oldFrame);
