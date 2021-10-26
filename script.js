@@ -13,11 +13,11 @@ function changeFrame (event) {
 }
 
 
-document.getElementById('CaseConverter').addEventListener('click',
+document.getElementById('case-converter').addEventListener('click',
 changeFrame);
 
-document.getElementById('FlashCards').addEventListener('click',
+document.getElementById('flashcards').addEventListener('click',
 changeFrame);
 
-document.getElementById('VirtualPiano').addEventListener('click',
+document.getElementById('virtual-piano').addEventListener('click',
 changeFrame);
