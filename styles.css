@@ -1,0 +1,12 @@
+* {
+  box-sizing: border-box;
+}
+
+button {
+  display: block;
+  margin: 10px 0;
+}
+
+nav {
+  display: inline-block;
+}
