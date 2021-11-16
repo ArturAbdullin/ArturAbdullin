@@ -1,89 +1,3 @@
-
-function BinaryTreeNode(val = 0, left = null, right = null) {
-  this.val = val;
-  this.left = left;
-  this.right = right;
-}
-
-let a = [120, -10, 10, -15, null, 0, 20];
-// let a = [1,2,3];
-
-function ArrayToTree(array) {
-  const Tree = new BinaryTreeNode(array[0]);
-  const currentLevel = [];
-  if (Tree.val !== null) {
-    currentLevel.push(Tree);
-  } else {
-    return null;
-  }
-
-  let valIndex = 1;
-  while (currentLevel && array[valIndex] !== undefined) {
-    let currentNode = currentLevel.shift();
-    currentNode.left =
-      array[valIndex] !== null ? new BinaryTreeNode(array[valIndex]) : null;
-    valIndex++;
-    currentNode.left && currentLevel.push(currentNode.left);
-    currentNode.right =
-      array[valIndex] !== null ? new BinaryTreeNode(array[valIndex]) : null;
-    valIndex++;
-    currentNode.right && currentLevel.push(currentNode.right);
-  }
-  return Tree;
-}
-
-const Tree = ArrayToTree(a);
-
-function VisualizeTree(Tree) {
-  const TreeNodeVisual = new BinaryTreeNode(Tree.val, Tree.left, Tree.right);
-  TreeNodeVisual.level = 0;
-  TreeNodeVisual.coordinates = { x: 0, y: 0 };
-  let queue = [TreeNodeVisual];
-  while (queue.length) {
-    // console.log('---queue 1---', queue);
-    let currentNode = queue.shift();
-    if (currentNode.left !== null) {
-      currentNode.left.parent = currentNode;
-      currentNode.left.lane = "left";
-      currentNode.left.level = currentNode.level + 1;
-      queue.push(currentNode.left);
-    }
-    // console.log('---queue 2---', queue);
-    if (currentNode.right !== null) {
-      currentNode.right.parent = currentNode;
-      currentNode.right.lane = "right";
-      currentNode.right.level = currentNode.level + 1;
-      queue.push(currentNode.right);
-    }
-  }
-  function findCommonParentNode(TreeNode1, TreeNode2) {
-    let parent1 = TreeNode1.parent;
-    let parent2 = TreeNode2.parent;
-    while (parent1 !== parent2) {
-      parent1 = parent1.parent;
-      parent2 = parent2.parent;
-    }
-    return parent1;
-  }
-  return TreeNodeVisual;
-}
-
-function findCommonParentNode(TreeNode1, TreeNode2) {
-  let parent1 = TreeNode1.parent;
-  let parent2 = TreeNode2.parent;
-  while (parent1 !== parent2) {
-    parent1 = parent1.parent;
-    parent2 = parent2.parent;
-  }
-  return parent1.val;
-}
-
-let tree2 = VisualizeTree(Tree);
-// console.log(tree2);
-
-// let parentNodeVal = findCommonParentNode(tree2.left.left, tree2.right.right);
-// console.log(parentNodeVal);
-
 class BinaryTreeNodeVisual {
   constructor(val, left = null, right = null) {
     this.val = val;
@@ -139,8 +53,8 @@ class BinaryTreeNodeVisual {
   }
 
   /**
-  * @param {{x: number, y: number}} coordinates 
-  */
+   * @param {{x: number, y: number}} coordinates
+   */
   updateCoordinates(coordinates) {
     if (this.parent) {
       this.offset = coordinates != undefined ? coordinates : this.offset;
@@ -172,20 +86,22 @@ function assembleBinaryTree(array) {
   }
 
   // stage 1: convert array to tree; set initial coordinates
-  let offsets = {xLeftClose: -5, xLeft: -10, xRightClose: 5, xRight: 10, y: 20};
+  let offsets = {
+    xLeftClose: -5,
+    xLeft: -10,
+    xRightClose: 5,
+    xRight: 10,
+    y: 20,
+  };
   while (nodesQueue && array[index] !== undefined) {
     let currentNode = nodesQueue.shift();
     currentNode.addChild(
-      array[index] !== null
-        ? new BinaryTreeNodeVisual(array[index])
-        : null,
+      array[index] !== null ? new BinaryTreeNodeVisual(array[index]) : null,
       "left"
     );
     if (++index < array.length) {
       currentNode.addChild(
-        array[index] !== null
-          ? new BinaryTreeNodeVisual(array[index])
-          : null,
+        array[index] !== null ? new BinaryTreeNodeVisual(array[index]) : null,
         "right"
       );
       index++;
@@ -195,71 +111,98 @@ function assembleBinaryTree(array) {
     if (currentNode.left && currentNode.right) {
       currentNode.left.updateCoordinates({
         x: offsets.xLeft,
-        y: offsets.y
+        y: offsets.y,
       });
       currentNode.right.updateCoordinates({
         x: offsets.xRight,
-        y: offsets.y
+        y: offsets.y,
       });
       nodesQueue.push(currentNode.left);
       nodesQueue.push(currentNode.right);
     } else if (currentNode.left) {
       currentNode.left.updateCoordinates({
         x: offsets.xLeftClose,
-        y: offsets.y
+        y: offsets.y,
       });
       nodesQueue.push(currentNode.left);
     } else if (currentNode.right) {
       currentNode.right.updateCoordinates({
         x: offsets.xRightClose,
-        y: offsets.y
+        y: offsets.y,
       });
       nodesQueue.push(currentNode.right);
     }
   }
 
-  
-  function fixCoordinates(Tree, minDistance) {
+  Tree.updateCoordinates({
+    x: 0,
+    y: 0,
+  });
+  // stage 2: fix coordinates
+  function fixCoordinates(Tree, minXDistance, minYDistance) {
     let nodesQueue = [Tree];
-    
-    let previousNode = Tree;
-    let currentNode = null;
+    let currentLevel = 2;
+    let sameLevelNodes = [[]];
 
+    // stage 1: Tree to 2D array; levels of Tree nodes
     while (nodesQueue.length) {
-      currentNode = nodesQueue.shift();
-      // console.log('previous node', previousNode.val);
-      // console.log('current node ', currentNode.val);
-      if (currentNode.level === previousNode.level &&
-        currentNode.parent !== previousNode.parent){
-          let distance = currentNode.coordinates.x - previousNode.coordinates.x;
-          if (distance < minDistance) {
-            let newOffset = (minDistance - distance) / 2;
-            // console.log('new offset ', newOffset);
-            let commonParentNode = findCommonParentNode(previousNode, currentNode);
-            // console.log(commonParentNode.left.coordinates);
-            commonParentNode.left.updateCoordinates(
-              {
-                x: commonParentNode.left.coordinates.x - newOffset,
-                y: commonParentNode.left.coordinates.y
-              }
-            );
-            // console.log(commonParentNode.left.coordinates);
-            // console.log('---')
-            // console.log(commonParentNode.right.coordinates);
-            commonParentNode.right.updateCoordinates(
-              {
-                x: commonParentNode.right.coordinates.x + newOffset,
-                y: commonParentNode.right.coordinates.y
-              }
-            );
-            // console.log(commonParentNode.right.coordinates);
-            // console.log('---')
-            // showCoordinates(Tree);
-          }
+      let currentNode = nodesQueue.shift();
+      if (currentNode.level === currentLevel) {
+        sameLevelNodes[currentLevel - 2].push(currentNode);
+      } else if (currentNode.level > currentLevel) {
+        sameLevelNodes.push([]);
+        sameLevelNodes[++currentLevel - 2].push(currentNode);
       }
       currentNode.left && nodesQueue.push(currentNode.left);
       currentNode.right && nodesQueue.push(currentNode.right);
-      previousNode = currentNode;
+    }
+
+    // stage 2: fix coordinates level by level
+    for (const level of sameLevelNodes) {
+      if (level.length < 2) {
+        continue;
+      }
+
+      let nodesToFix = [];
+
+      // fix coordinates on the level starting with nodes with the closest common parent node
+      for (let treeNode = 1; treeNode < level.length; treeNode++) {
+        let commonParentNode;
+        if (level[treeNode - 1].parent !== level[treeNode].parent) {
+          commonParentNode = findCommonParentNode(
+            level[treeNode - 1],
+            level[treeNode]
+          );
+          nodesToFix.push({
+            nodes: [level[treeNode - 1], level[treeNode]],
+            commonParentNode: commonParentNode,
+            commonParentLevel: commonParentNode.level,
+          });
+        }
+      }
+      nodesToFix.sort((a, b) => {
+        return b.commonParentLevel - a.commonParentLevel;
+      });
+      console.log(nodesToFix);
+      
+      for (let i = 0; i < nodesToFix.length; i++) {
+        let distance = nodesToFix[i].nodes[1].coordinates.x - nodesToFix[i].nodes[0].coordinates.x;
+        console.log(distance);
+        if (distance < minXDistance) {
+          let newOffset = (minXDistance - distance) / 2;
+          console.log('new offset ', newOffset);
+          console.log(nodesToFix[i].commonParentNode.left.coordinates.x);
+          nodesToFix[i].commonParentNode.left.updateCoordinates({
+            x: nodesToFix[i].commonParentNode.left.offset.x - newOffset,
+            y: minYDistance
+          });
+          nodesToFix[i].commonParentNode.right.updateCoordinates({
+            x: nodesToFix[i].commonParentNode.right.offset.x + newOffset,
+            y: minYDistance
+          });
+          console.log([showCoordinates(Tree)]);
+        }
+      }
     }
   }
 
@@ -273,26 +216,30 @@ function assembleBinaryTree(array) {
     return parent1;
   }
 
-  // showCoordinates(Tree);
-  // console.log('---------------')
-  fixCoordinates(Tree, 40);
-
+  console.log(showCoordinates(Tree));
+  console.log("---------------");
+  fixCoordinates(Tree, 40, offsets.y);
+  fixCoordinates(Tree, 40, offsets.y);
   return Tree;
 }
 
-// let tree3 = assembleBinaryTree([1, 2, 3, 4, null, null, 5, 6, 7]);
-let tree3 = assembleBinaryTree([0, -10, 10, null, -5, 0, 20, -15, 5, -10, 10, 15, null, -25, -5, 0, null, -20, 0, null, 15, 10]);
+let a = [0, -10, 10, null, -5, 0, 20, -15, 5, -10, 10, 15, null, -25, -5, 0, null, null, 0, 15, 15, 10];
 
-// console.log(tree3);
+let tree2 = assembleBinaryTree(a);
 
 function showCoordinates(BinaryTree) {
   let queue = [BinaryTree];
+  let xcoords = [];
+  let ycoords = [];
   while (queue.length) {
     let currentNode = queue.shift();
     console.log(currentNode.coordinates);
+    xcoords.push(currentNode.coordinates.x);
+    ycoords.push(currentNode.coordinates.y);
     currentNode.left && queue.push(currentNode.left);
     currentNode.right && queue.push(currentNode.right);
   }
+  return {x: xcoords, y: ycoords};
 }
 
-showCoordinates(tree3);
+let plot = showCoordinates(tree2);
