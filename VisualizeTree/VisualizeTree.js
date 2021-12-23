@@ -165,7 +165,7 @@ function assembleBinaryTree(array) {
 
       let nodesToFix = [];
 
-      // fix coordinates on the level starting with nodes with the closest common parent node
+      
       for (let treeNode = 1; treeNode < level.length; treeNode++) {
         let commonParentNode;
         if (level[treeNode - 1].parent !== level[treeNode].parent) {
@@ -180,18 +180,22 @@ function assembleBinaryTree(array) {
           });
         }
       }
+
+      // make an order in which neighbour nodes coordinates will be fixed
       nodesToFix.sort((a, b) => {
         return b.commonParentLevel - a.commonParentLevel;
       });
-      console.log(nodesToFix);
+      // console.log(nodesToFix);
       
+      // fix coordinates on the level starting with nodes with the closest common parent node
       for (let i = 0; i < nodesToFix.length; i++) {
         let distance = nodesToFix[i].nodes[1].coordinates.x - nodesToFix[i].nodes[0].coordinates.x;
-        console.log(distance);
+        // console.log(distance);
         if (distance < minXDistance) {
+          console.log('hi');
           let newOffset = (minXDistance - distance) / 2;
-          console.log('new offset ', newOffset);
-          console.log(nodesToFix[i].commonParentNode.left.coordinates.x);
+          // console.log('new offset ', newOffset);
+          // console.log(nodesToFix[i].commonParentNode.left.coordinates.x);
           nodesToFix[i].commonParentNode.left.updateCoordinates({
             x: nodesToFix[i].commonParentNode.left.offset.x - newOffset,
             y: minYDistance
@@ -200,7 +204,7 @@ function assembleBinaryTree(array) {
             x: nodesToFix[i].commonParentNode.right.offset.x + newOffset,
             y: minYDistance
           });
-          console.log([showCoordinates(Tree)]);
+          // console.log([showCoordinates(Tree)]);
         }
       }
     }
@@ -216,14 +220,18 @@ function assembleBinaryTree(array) {
     return parent1;
   }
 
-  console.log(showCoordinates(Tree));
-  console.log("---------------");
-  fixCoordinates(Tree, 40, offsets.y);
-  fixCoordinates(Tree, 40, offsets.y);
+  // console.log(showCoordinates(Tree));
+  // console.log("---------------");
+  fixCoordinates(Tree, 20, offsets.y);
+  // make second run to fix residuals
+  console.log('----------###')
+  fixCoordinates(Tree, 20, offsets.y);
+  
   return Tree;
 }
 
-let a = [0, -10, 10, null, -5, 0, 20, -15, 5, -10, 10, 15, null, -25, -5, 0, null, null, 0, 15, 15, 10];
+// let a = [0, -10, 10, null, -5, 0, 20, -15, 5, -10, 10, 15, null, -25, -5, 0, null, -20, 0, null, 15, 10, 0, -10, 10, null, -5, 0, 20, -15, 5, -10, 10, 15, null, -25, -5, 0, null, -20, 0, null, 15, 10,0, -10, 10, null, -5, 0, 20, -15, 5, -10, 10, 15, null, -25, -5, 0, null, -20, 0, null, 15, 10];
+let a = [1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1];
 
 let tree2 = assembleBinaryTree(a);
 
@@ -243,3 +251,6 @@ function showCoordinates(BinaryTree) {
 }
 
 let plot = showCoordinates(tree2);
+
+let x = [plot.x.slice(0, 100), plot.x.slice(100,199)];
+let y = [plot.y.slice(0, 100), plot.y.slice(100,199)];
