@@ -1,5 +1,21 @@
-document.getElementById("months-from-start").textContent =
-  countMonthsBetween(new Date(2021, 5, 1), new Date());
+// add GitHub repo prefix to all paths marked with "gitlink" attribute (in my case /ArturAbdullin)
+function addGitRepoPrefix() {
+  let prefix = "/ArturAbdullin";
+  let elements = [...document.querySelectorAll("[git-repo-link]")];
+  for (const element of elements) {
+    if (element.attributes.src) {
+      element.attributes.src.value = prefix + element.attributes.src.value;
+    } else if (element.attributes.href) {
+      element.attributes.href.value = prefix + element.attributes.href.value;
+    }
+  }
+};
+// addGitRepoPrefix();
+
+document.getElementById("months-from-start").textContent = countMonthsBetween(
+  new Date(2021, 5, 1),
+  new Date()
+);
 
 function countMonthsBetween(d1, d2) {
   let months =

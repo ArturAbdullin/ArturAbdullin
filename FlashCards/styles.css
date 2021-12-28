@@ -40,6 +40,7 @@ body {
 .flex-item:hover .card {
     transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
 }
 
 .front,
@@ -59,6 +60,7 @@ body {
     color: coral;
     backface-visibility: hidden;
     -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .back {
@@ -68,5 +70,6 @@ body {
     background-color: coral;
     color: antiquewhite;
     -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
