@@ -52,6 +52,7 @@ body {
     justify-content: center;
     align-items: center;
     position: absolute;
+    transform: rotateX(0deg); /*backface-visibility fix for FireFox*/
 }
 
 .front {
@@ -67,6 +68,7 @@ body {
     z-index: 1;
     transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
     background-color: coral;
     color: antiquewhite;
     -moz-backface-visibility: hidden;
