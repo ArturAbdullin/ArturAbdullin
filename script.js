@@ -10,7 +10,7 @@ function addGitRepoPrefix() {
     }
   }
 };
-// addGitRepoPrefix();
+addGitRepoPrefix();
 
 document.getElementById("months-from-start").textContent = countMonthsBetween(
   new Date(2021, 5, 1),

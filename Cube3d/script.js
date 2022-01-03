@@ -1,5 +1,4 @@
 let cube = document.querySelector(".cube");
-let cubeStyle = getComputedStyle(cube);
 
 let pi = Math.PI;
 let origin = [1, 0, 0, 0, 1, 0, 0, 0, 1];
@@ -81,7 +80,6 @@ document.addEventListener('keydown', function(e) {
 });
 
 
-let mousePositionContainer = document.querySelector('.mouse-position-container');
 let turned = false;
 document.addEventListener('mousedown', handleMouseDown);
 document.addEventListener('mouseup', handleMouseUp);
@@ -98,13 +96,15 @@ function handleMouseUp(e) {
 }
 
 function handleMouseMove(e) {
-  mousePositionContainer.innerHTML = `mouse position: ${e.movementX}; ${e.movementY}`; 
   if (!turned) {
     let mx = e.movementX;
     let my = e.movementY;
-    origin = turn(origin, checkDirection(mx, my, 2));
-    cube.style.transform = array2DOMtransform(origin);
-    turned = true;
+    let newOrigin = turn(origin, checkDirection(mx, my, 2));
+    if (origin !== newOrigin) {
+      origin = newOrigin;
+      cube.style.transform = array2DOMtransform(origin);
+      turned = true;
+    }
   }
 }
 
@@ -141,11 +141,12 @@ function handleTouchEnd(e) {
 function handleTouchMove(e) {
   let movementX = e.touches[0].clientX - touch.x;
   let movementY = e.touches[0].clientY - touch.y;
-  mousePositionContainer.innerHTML = `touch position: ${movementX}; ${movementY}`;
-  console.log("turned: ", turned);
   if (!turned) {
-    origin = turn(origin, checkDirection(movementX, movementY, 10));
-    cube.style.transform = array2DOMtransform(origin);
-    turned = true;
+    let newOrigin = turn(origin, checkDirection(movementX, movementY, 10));
+    if (origin !== newOrigin) {
+      origin = newOrigin;
+      cube.style.transform = array2DOMtransform(origin);
+      turned = true;
+    }
   }
 }

@@ -1,5 +1,5 @@
 :root {
-  --cube-size: 40vw;
+  --cube-size: 30vw;
   --cube-half-size: calc(var(--cube-size)/2);
   --ff-size: calc(0.9*var(--cube-size));
   --cube-face-color: linear-gradient(rgba(212, 0, 0, 0.1), rgba(56, 0, 238));
@@ -29,7 +29,7 @@ body {
   align-items: center;
   height: 50vw;
   width: 50vw;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   perspective: 50vw;
 }
 
@@ -40,7 +40,6 @@ body {
   transform-style: preserve-3d;
   -moz-transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
-  /* transform: rotateX(90deg); */
 }
 
 .face {
