@@ -1,5 +1,5 @@
 :root {
-  --cube-size: 30vw;
+  --cube-size: 40vw;
   --cube-half-size: calc(var(--cube-size)/2);
   --ff-size: calc(0.9*var(--cube-size));
   --cube-face-color: linear-gradient(rgba(212, 0, 0, 0.1), rgba(56, 0, 238));
@@ -12,6 +12,7 @@
 html,
 body {
   height: 99%;
+  overflow: hidden;
 }
 
 body {

@@ -56,7 +56,7 @@ function turn(origin, direction) {
     case 'right':
       return rotate(origin, [0, 1, 0], pi/2);
     default:
-      break;
+      return origin;
   }
 }
 
@@ -82,9 +82,11 @@ document.addEventListener('keydown', function(e) {
 
 
 let mousePositionContainer = document.querySelector('.mouse-position-container');
-let moved = false;
+let turned = false;
 document.addEventListener('mousedown', handleMouseDown);
 document.addEventListener('mouseup', handleMouseUp);
+document.addEventListener('touchstart', handleTouchStart);
+document.addEventListener('touchend', handleTouchEnd);
 
 function handleMouseDown(e) {
   document.addEventListener('mousemove', handleMouseMove);
@@ -92,33 +94,58 @@ function handleMouseDown(e) {
 
 function handleMouseUp(e) {
   document.removeEventListener('mousemove', handleMouseMove);
-  moved = false;
+  turned = false;
 }
 
 function handleMouseMove(e) {
   mousePositionContainer.innerHTML = `mouse position: ${e.movementX}; ${e.movementY}`; 
-  if (!moved) {
-    moved = true;
+  if (!turned) {
     let mx = e.movementX;
     let my = e.movementY;
-    let mxabs = Math.abs(mx);
-    let myabs = Math.abs(my);
-    if (mxabs >= myabs) {
-      if (mxabs >= 2) {
-        origin = mx > 0 ? turn(origin, 'right') : turn(origin, 'left');
-        cube.style.transform = array2DOMtransform(origin);
-      }
-    } else if (myabs >= 2) {
-      origin = my > 0 ? turn(origin, 'down') : turn(origin, 'up');
-        cube.style.transform = array2DOMtransform(origin);
-    }
+    origin = turn(origin, checkDirection(mx, my, 2));
+    cube.style.transform = array2DOMtransform(origin);
+    turned = true;
   }
-  
 }
 
-// function triggerMouseEvent (node) {
-//   let evt = new MouseEvent('mousedown');
-//   node.dispatchEvent(evt);
-// }
+function checkDirection(x, y, sensitivity) {
+  let xabs = Math.abs(x);
+  let yabs = Math.abs(y);
+  if (xabs >= yabs) {
+    if (xabs >= sensitivity) {
+      return x > 0 ? 'right' : 'left';
+    }
+  } else if (yabs >= sensitivity) {
+    return y > 0 ? 'down' : 'up';
+  }
+  return null;
+}
 
-// triggerMouseEvent(document);
+let touch = {
+  x: 0,
+  y: 0
+}
+
+function handleTouchStart(e) {
+  touch.x = e.touches[0].clientX;
+  touch.y = e.touches[0].clientY;
+  document.addEventListener('touchmove', handleTouchMove);
+}
+
+function handleTouchEnd(e) {
+  document.removeEventListener('touchmove', handleTouchMove);
+  turned = false;
+  [touch.x, touch.y] = [0, 0];
+}
+
+function handleTouchMove(e) {
+  let movementX = e.touches[0].clientX - touch.x;
+  let movementY = e.touches[0].clientY - touch.y;
+  mousePositionContainer.innerHTML = `touch position: ${movementX}; ${movementY}`;
+  console.log("turned: ", turned);
+  if (!turned) {
+    origin = turn(origin, checkDirection(movementX, movementY, 10));
+    cube.style.transform = array2DOMtransform(origin);
+    turned = true;
+  }
+}
